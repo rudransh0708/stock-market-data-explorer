@@ -27,3 +27,12 @@ print(f"AAPL daily return: {daily_return * 100:.2f}%")
 daily_returns = close_prices.pct_change()
 
 print(daily_returns.head())
+
+# Cumulative returns
+cumulative_returns = (1 + daily_returns).cumprod() - 1
+
+print("\nCumulative returns:")
+print(cumulative_returns.head())
+
+print("\nTotal cumulative returns:")
+print(cumulative_returns.iloc[-1] * 100)
