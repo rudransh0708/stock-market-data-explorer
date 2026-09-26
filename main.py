@@ -1,4 +1,14 @@
 import yfinance as yf
-stock = yf.Ticker("AAPL")
-data = stock.history(period="5d")
-print(data.to_string())
+
+tickers = ["AAPL", "MSFT", "NVDA", "JPM", "TSLA", "AMZN"]
+
+data = yf.download(
+    tickers,
+    period="5y",
+    interval="1d",
+    auto_adjust=True
+)
+
+close_prices = data["Close"]
+
+print(close_prices.head())
