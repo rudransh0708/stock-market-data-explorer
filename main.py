@@ -36,6 +36,17 @@ daily_returns = close_prices.pct_change()
 print("\nDaily returns:")
 print(daily_returns.head())
 
+# Volatility
+daily_volatility = daily_returns.std()
+
+annualized_volatility = daily_volatility * (252 ** 0.5)
+
+print("\nDaily volatility:")
+print(daily_volatility * 100)
+
+print("\nAnnualized volatility:")
+print(annualized_volatility * 100)
+
 
 # Cumulative returns
 cumulative_returns = (1 + daily_returns).cumprod() - 1
@@ -81,4 +92,18 @@ plt.grid(True)
 plt.tight_layout()
 
 plt.savefig("figures/aapl_moving_averages.png", dpi=300)
+plt.show()
+
+# Plot annualized volatility
+plt.figure(figsize=(10, 6))
+
+(annualized_volatility * 100).plot(kind="bar")
+
+plt.title("Annualized Volatility")
+plt.xlabel("Stock")
+plt.ylabel("Volatility (%)")
+plt.grid(axis="y")
+plt.tight_layout()
+
+plt.savefig("figures/annualized_volatility.png", dpi=300)
 plt.show()
