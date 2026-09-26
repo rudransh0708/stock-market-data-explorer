@@ -1,4 +1,5 @@
 import yfinance as yf
+import matplotlib.pyplot as plt
 
 tickers = ["AAPL", "MSFT", "NVDA", "JPM", "TSLA", "AMZN"]
 
@@ -36,3 +37,16 @@ print(cumulative_returns.head())
 
 print("\nTotal cumulative returns:")
 print(cumulative_returns.iloc[-1] * 100)
+
+# Plot cumulative returns
+(cumulative_returns * 100).plot(figsize=(12, 6))
+
+plt.title("Cumulative Returns Over 5 Years")
+plt.xlabel("Date")
+plt.ylabel("Cumulative Return (%)")
+plt.legend(title="Ticker")
+plt.grid(True)
+plt.tight_layout()
+
+plt.savefig("figures/cumulative_returns.png", dpi=300)
+plt.show()
