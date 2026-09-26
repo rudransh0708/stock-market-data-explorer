@@ -14,8 +14,12 @@ close_prices = data["Close"]
 
 print(close_prices.head())
 
+
+# AAPL closing prices
 aapl = close_prices["AAPL"]
 
+
+# Manually calculate one daily return
 day_1 = aapl.iloc[0]
 day_2 = aapl.iloc[1]
 
@@ -25,9 +29,13 @@ print(f"Day 1 close: ${day_1:.2f}")
 print(f"Day 2 close: ${day_2:.2f}")
 print(f"AAPL daily return: {daily_return * 100:.2f}%")
 
+
+# Daily returns for all stocks
 daily_returns = close_prices.pct_change()
 
+print("\nDaily returns:")
 print(daily_returns.head())
+
 
 # Cumulative returns
 cumulative_returns = (1 + daily_returns).cumprod() - 1
@@ -37,6 +45,12 @@ print(cumulative_returns.head())
 
 print("\nTotal cumulative returns:")
 print(cumulative_returns.iloc[-1] * 100)
+
+
+# Moving averages for AAPL
+ma_20 = aapl.rolling(window=20).mean()
+ma_50 = aapl.rolling(window=50).mean()
+
 
 # Plot cumulative returns
 (cumulative_returns * 100).plot(figsize=(12, 6))
@@ -49,4 +63,22 @@ plt.grid(True)
 plt.tight_layout()
 
 plt.savefig("figures/cumulative_returns.png", dpi=300)
+plt.show()
+
+
+# Plot AAPL price and moving averages
+plt.figure(figsize=(12, 6))
+
+plt.plot(aapl, label="AAPL Price")
+plt.plot(ma_20, label="20-Day Moving Average")
+plt.plot(ma_50, label="50-Day Moving Average")
+
+plt.title("AAPL Price and Moving Averages")
+plt.xlabel("Date")
+plt.ylabel("Price ($)")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+
+plt.savefig("figures/aapl_moving_averages.png", dpi=300)
 plt.show()
