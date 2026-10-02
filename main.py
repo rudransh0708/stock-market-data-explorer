@@ -1,5 +1,6 @@
 import yfinance as yf
 import matplotlib.pyplot as plt
+import pandas as pd
 
 tickers = ["AAPL", "MSFT", "NVDA", "JPM", "TSLA", "AMZN"]
 
@@ -57,6 +58,41 @@ max_drawdown = drawdowns.min()
 print("\nMaximum drawdown:")
 print(max_drawdown * 100)
 
+# Correlation matrix
+correlation_matrix = daily_returns.corr()
+
+print("\nCorrelation matrix:")
+print(correlation_matrix)
+
+# Sharpe ratio
+risk_free_rate = 0
+
+annualized_return = daily_returns.mean() * 252
+annualized_volatility = daily_returns.std() * (252 ** 0.5)
+
+sharpe_ratio = (
+    annualized_return - risk_free_rate
+) / annualized_volatility
+
+print("\nSharpe ratios:")
+print(sharpe_ratio)
+
+# Best and worst trading days
+best_days = daily_returns.max() * 100
+worst_days = daily_returns.min() * 100
+
+best_dates = daily_returns.idxmax()
+worst_dates = daily_returns.idxmin()
+
+best_worst_days = pd.DataFrame({
+    "Best Day (%)": best_days,
+    "Best Day Date": best_dates,
+    "Worst Day (%)": worst_days,
+    "Worst Day Date": worst_dates
+})
+
+print("\nBest and worst trading days:")
+print(best_worst_days)
 
 # Cumulative returns
 cumulative_returns = (1 + daily_returns).cumprod() - 1
@@ -131,3 +167,71 @@ plt.tight_layout()
 
 plt.savefig("figures/maximum_drawdown.png", dpi=300)
 plt.show()
+
+# Plot correlation matrix
+plt.figure(figsize=(8, 6))
+
+plt.imshow(
+    correlation_matrix,
+    cmap="coolwarm",
+    vmin=-1,
+    vmax=1
+)
+
+plt.colorbar(label="Correlation")
+
+plt.xticks(
+    range(len(correlation_matrix.columns)),
+    correlation_matrix.columns
+)
+
+plt.yticks(
+    range(len(correlation_matrix.index)),
+    correlation_matrix.index
+)
+
+# Add correlation values inside each square
+for i in range(len(correlation_matrix.index)):
+    for j in range(len(correlation_matrix.columns)):
+        plt.text(
+            j,
+            i,
+            f"{correlation_matrix.iloc[i, j]:.2f}",
+            ha="center",
+            va="center"
+        )
+
+plt.title("Stock Return Correlation Matrix")
+plt.tight_layout()
+
+plt.savefig("figures/correlation_matrix.png", dpi=300)
+plt.show()
+
+# Plot Sharpe ratios
+plt.figure(figsize=(10, 6))
+
+sharpe_ratio.plot(kind="bar")
+
+plt.title("Sharpe Ratio Comparison")
+plt.xlabel("Stock")
+plt.ylabel("Sharpe Ratio")
+plt.grid(axis="y")
+plt.tight_layout()
+
+plt.savefig("figures/sharpe_ratios.png", dpi=300)
+plt.show()
+
+# Final summary table
+summary = pd.DataFrame({
+    "Cumulative Return (%)": cumulative_returns.iloc[-1] * 100,
+    "Annualized Volatility (%)": annualized_volatility * 100,
+    "Maximum Drawdown (%)": max_drawdown * 100,
+    "Sharpe Ratio": sharpe_ratio,
+    "Best Day (%)": best_days,
+    "Worst Day (%)": worst_days
+})
+
+summary = summary.round(2)
+
+print("\nStock Performance Summary:")
+print(summary)
