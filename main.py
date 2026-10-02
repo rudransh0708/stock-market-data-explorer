@@ -47,6 +47,16 @@ print(daily_volatility * 100)
 print("\nAnnualized volatility:")
 print(annualized_volatility * 100)
 
+# Maximum drawdown
+running_peak = close_prices.cummax()
+
+drawdowns = (close_prices / running_peak) - 1
+
+max_drawdown = drawdowns.min()
+
+print("\nMaximum drawdown:")
+print(max_drawdown * 100)
+
 
 # Cumulative returns
 cumulative_returns = (1 + daily_returns).cumprod() - 1
@@ -106,4 +116,18 @@ plt.grid(axis="y")
 plt.tight_layout()
 
 plt.savefig("figures/annualized_volatility.png", dpi=300)
+plt.show()
+
+# Plot maximum drawdown
+plt.figure(figsize=(10, 6))
+
+(max_drawdown * 100).plot(kind="bar")
+
+plt.title("Maximum Drawdown Over 5 Years")
+plt.xlabel("Stock")
+plt.ylabel("Maximum Drawdown (%)")
+plt.grid(axis="y")
+plt.tight_layout()
+
+plt.savefig("figures/maximum_drawdown.png", dpi=300)
 plt.show()
